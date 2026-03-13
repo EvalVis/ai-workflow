@@ -55,7 +55,13 @@ Runs `git commit`, then copies the **entire** latest Claude Code session to `.cl
 ### 1b. Commit with light (incremental) conversation saved
 
 ```bash
-# Windows
+# Linux/macOS
+bash .claude/skills/git-conversation-history/bash/commit-light.sh "feat: title" ["optional description"]
+
+# Windows (pwsh / PowerShell 7+)
+pwsh .claude/skills/git-conversation-history/powershell/commit-light.ps1 "feat: title" ["optional description"]
+
+# Windows (powershell / Windows PowerShell 5.x fallback)
 powershell .claude/skills/git-conversation-history/powershell/commit-light.ps1 "feat: title" ["optional description"]
 ```
 
