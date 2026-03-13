@@ -136,5 +136,4 @@ Omit commit SHA to list all history files with sizes.
     d82bb41.jsonl
 ```
 
-- `.jsonl` — one JSON object per line, Claude Code's native session format
-- Gitignored — local only, never pushed
+`.jsonl` — one JSON object per line, Claude Code's native session format
