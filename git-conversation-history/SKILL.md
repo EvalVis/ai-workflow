@@ -1,9 +1,9 @@
 ---
-name: smart-commit
+name: git-conversation-history
 description: Commit code and manage conversation history per commit. Use when committing features or fixes. Use proactively to look up past conversation context before editing a feature — prevents regressions.
 ---
 
-# Smart Commit & Conversation History
+# Git Conversation History
 
 ## Purpose
 
