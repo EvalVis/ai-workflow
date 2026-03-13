@@ -12,7 +12,7 @@ Every commit can have its full Claude Code conversation saved alongside it in:
 .claude/git-conversation-history/<commit-sha>.jsonl
 ```
 
-Before modifying an existing feature, grep the history to understand the original intent, constraints, and decisions — so you don't introduce bugs.
+Before modifying an existing feature, read the history to understand the original intent, constraints, and decisions — so you don't introduce bugs.
 
 **Always check conversation history before modifying an existing feature.**
 
@@ -86,32 +86,9 @@ powershell .claude/skills/git-conversation-history/powershell/save-history.ps1 <
 
 ---
 
-### 3. Grep history — always use a line limit
+### 3. Count lines in history file(s)
 
-Conversation files can be very large. **Always start small and expand only if needed.**
-
-```bash
-# Linux/macOS
-bash .claude/skills/git-conversation-history/bash/grep-history.sh "keyword" [max_lines=50]
-
-# Windows
-pwsh .claude/skills/git-conversation-history/powershell/grep-history.ps1 "keyword" [max_lines=50]
-# or
-powershell .claude/skills/git-conversation-history/powershell/grep-history.ps1 "keyword" [max_lines=50]
-```
-
-**Workflow:**
-1. `grep-history.ps1 "payment"` — first 50 hits
-2. If truncated: `grep-history.ps1 "payment validation" 200`
-3. Use `count-lines` to gauge file size before going deep
-
-Each result is prefixed with `filename:linenum:` so you can trace it back to a commit SHA.
-
----
-
-### 4. Count lines in history file(s)
-
-Check file size before grepping deeply.
+Check file size before reading deeply.
 
 ```bash
 # Linux/macOS
@@ -124,6 +101,31 @@ powershell .claude/skills/git-conversation-history/powershell/count-lines.ps1 [c
 ```
 
 Omit commit SHA to list all history files with sizes.
+
+---
+
+### 4. Read a line range from a history file
+
+Conversation files can be very large. Use `count-lines` first to know the total, then read the range you need.
+
+```bash
+# Linux/macOS
+bash .claude/skills/git-conversation-history/bash/get-history-lines.sh <commit-sha> <start_line> <end_line>
+
+# Windows
+pwsh .claude/skills/git-conversation-history/powershell/get-history-lines.ps1 <commit-sha> <start_line> <end_line>
+# or
+powershell .claude/skills/git-conversation-history/powershell/get-history-lines.ps1 <commit-sha> <start_line> <end_line>
+```
+
+All three arguments are required. Partial SHAs are accepted — e.g. `a3f9c12` will match `a3f9c12abc.jsonl`.
+
+Each output line is prefixed with its line number: `42: {"role": ...}`
+
+**Workflow:**
+1. `count-lines` to see file sizes
+2. `get-history-lines a3f9c12 1 100` to read the first 100 lines
+3. Continue with the next range as needed
 
 ---
 
