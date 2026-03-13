@@ -12,9 +12,12 @@ Every commit can have its full Claude Code conversation saved alongside it in:
 .claude/git-conversation-history/<commit-sha>.jsonl
 ```
 
-Before modifying an existing feature, read the history to understand the original intent, constraints, and decisions — so you don't introduce bugs.
-
-**Always check conversation history before modifying an existing feature.**
+Before modifying an existing feature, find relevant commit(s), read conversation history (scripts provided below) to understand the original intent, constraints, and decisions — so you don't introduce bugs.
+Recommended approach:
+1. After understanding user prompt, find relevant commit(s) by the title.
+2. Read commit conversation history (use scripts below).
+3. You now have better context.
+4. When you do a feature either use commit or light commit (scripts below) so you save the conversation context for the future.
 
 ---
 
