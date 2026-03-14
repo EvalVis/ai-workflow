@@ -40,6 +40,8 @@ To detect which is available on Windows, run: `pwsh -Version 2>/dev/null || powe
 
 ### 1a. Commit with full conversation saved
 
+Stage files you want to commit before executing this script.
+
 ```bash
 # Linux/macOS
 bash .claude/skills/git-conversation-history/bash/commit.sh "feat: title" ["optional description"]
@@ -56,6 +58,8 @@ Runs `git commit`, then copies the **entire** latest Claude Code session to `.cl
 ---
 
 ### 1b. Commit with light (incremental) conversation saved
+
+Stage files you want to commit before executing this script.
 
 ```bash
 # Linux/macOS

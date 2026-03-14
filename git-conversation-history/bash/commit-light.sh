@@ -27,6 +27,8 @@ SESSION_FILE=$(find "$HOME/.claude/projects" -name "*.jsonl" -type f 2>/dev/null
   | xargs ls -t 2>/dev/null \
   | head -1)
 
+HISTORY_FILE="$HISTORY_DIR/$COMMIT_SHA.jsonl"
+
 if [ -z "$SESSION_FILE" ] || [ ! -f "$SESSION_FILE" ]; then
   echo "WARNING: No Claude Code session found -- commit saved without history."
 else
@@ -37,30 +39,29 @@ else
 
   if [ -n "$PREV_HISTORY_FILE" ] && [ -f "$PREV_HISTORY_FILE" ]; then
     LAST_LINE=$(tail -1 "$PREV_HISTORY_FILE")
-    # Find the line number of the last line from previous history in the session file
     FOUND_IDX=$(grep -nF "$LAST_LINE" "$SESSION_FILE" | tail -1 | cut -d: -f1)
     TOTAL_LINES=$(wc -l < "$SESSION_FILE")
 
     if [ -n "$FOUND_IDX" ] && [ "$FOUND_IDX" -lt "$TOTAL_LINES" ]; then
-      tail -n +"$(( FOUND_IDX + 1 ))" "$SESSION_FILE" > "$HISTORY_DIR/$COMMIT_SHA.jsonl"
-      NEW_COUNT=$(wc -l < "$HISTORY_DIR/$COMMIT_SHA.jsonl")
-      echo "Light history saved: $NEW_COUNT new lines -> $HISTORY_DIR/$COMMIT_SHA.jsonl"
+      tail -n +"$(( FOUND_IDX + 1 ))" "$SESSION_FILE" > "$HISTORY_FILE"
+      NEW_COUNT=$(wc -l < "$HISTORY_FILE")
+      echo "Light history saved: $NEW_COUNT new lines -> $HISTORY_FILE"
     elif [ -n "$FOUND_IDX" ] && [ "$FOUND_IDX" -eq "$TOTAL_LINES" ]; then
       echo "No new conversation since last commit. Empty history saved."
-      > "$HISTORY_DIR/$COMMIT_SHA.jsonl"
+      > "$HISTORY_FILE"
     else
       echo "Could not locate prior history in session -- saving full session as fallback."
-      cp "$SESSION_FILE" "$HISTORY_DIR/$COMMIT_SHA.jsonl"
+      cp "$SESSION_FILE" "$HISTORY_FILE"
     fi
   else
     echo "No prior history found -- saving full session."
-    cp "$SESSION_FILE" "$HISTORY_DIR/$COMMIT_SHA.jsonl"
+    cp "$SESSION_FILE" "$HISTORY_FILE"
   fi
-fi
 
-GITIGNORE=".gitignore"
-if [ ! -f "$GITIGNORE" ] || ! grep -qF ".claude/git-conversation-history" "$GITIGNORE"; then
-  echo ".claude/git-conversation-history/" >> "$GITIGNORE"
+  git add "$HISTORY_FILE"
+  git commit --amend --no-edit > /dev/null
+  COMMIT_SHA=$(git rev-parse HEAD)
+  echo "History file amended into commit."
 fi
 
 echo "Committed: $TITLE ($COMMIT_SHA)"
