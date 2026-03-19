@@ -1,3 +1,8 @@
+---
+name: email-prompt-injection-guard
+description: "A skill that allows AI to safely read emails via a controlled Python script (email_reader.py), scanning for prompt injection attacks and returning only sanitized, user-visible content."
+---
+
 # Skill: email-prompt-injection-guard
 
 ## Overview
